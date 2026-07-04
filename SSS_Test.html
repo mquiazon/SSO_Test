@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Archive — Member Access</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1A17;
+    --panel:#152420;
+    --panel-line: rgba(243,236,221,0.14);
+    --parchment:#F3ECDD;
+    --parchment-dim:#E7DEC8;
+    --gold:#B8863B;
+    --gold-bright:#D6A75A;
+    --rust:#A45C40;
+    --green-accent:#3E6B57;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--parchment);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  .stage{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 1.15fr 1fr;
+  }
+  @media (max-width: 880px){
+    .stage{grid-template-columns:1fr;}
+    .panel{min-height:38vh;}
+  }
+
+  /* ---------- LEFT: editorial panel ---------- */
+  .panel{
+    background:
+      radial-gradient(120% 140% at 15% 10%, rgba(214,167,90,0.10), transparent 55%),
+      var(--panel);
+    color:var(--parchment);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:56px 56px 40px;
+    overflow:hidden;
+    border-right:1px solid var(--panel-line);
+  }
+  .panel::before{
+    content:"";
+    position:absolute;
+    inset:18px;
+    border:1px solid var(--panel-line);
+    pointer-events:none;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--parchment-dim);
+    opacity:0.85;
+  }
+  .brand .dot{width:6px;height:6px;border-radius:50%;background:var(--gold-bright);}
+
+  .panel-mid{
+    max-width:480px;
+    margin-top:auto;
+    margin-bottom:auto;
+    padding:60px 0;
+  }
+  .panel-mid h1{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:clamp(38px, 5vw, 58px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+    margin:0 0 22px;
+  }
+  .panel-mid h1 em{
+    font-style:italic;
+    font-weight:400;
+    color:var(--gold-bright);
+  }
+  .panel-mid p{
+    font-size:15.5px;
+    line-height:1.7;
+    color:var(--parchment-dim);
+    max-width:400px;
+    margin:0;
+  }
+
+  /* signature: seal that draws itself in */
+  .seal-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-top:36px;
+  }
+  .seal{width:46px;height:46px;flex:none;}
+  .seal circle, .seal path{
+    fill:none;
+    stroke:var(--gold-bright);
+    stroke-width:1.4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-dasharray:220;
+    stroke-dashoffset:220;
+    animation: draw 2.4s ease-out forwards;
+  }
+  .seal path{animation-delay:0.35s;}
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .seal-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    color:var(--parchment-dim);
+    line-height:1.6;
+  }
+  .seal-label b{color:var(--parchment); font-weight:500;}
+
+  .panel-foot{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--parchment-dim);
+    opacity:0.6;
+    display:flex;
+    justify-content:space-between;
+  }
+
+  /* ---------- RIGHT: access card ---------- */
+  .side{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 32px;
+    background:
+      repeating-linear-gradient(135deg, rgba(27,26,23,0.02) 0 2px, transparent 2px 26px),
+      var(--parchment);
+  }
+  .card{
+    width:100%;
+    max-width:400px;
+    position:relative;
+    background:#fff;
+    border:1px solid rgba(27,26,23,0.10);
+    box-shadow: 0 30px 60px -34px rgba(27,26,23,0.35);
+    padding:44px 38px 36px;
+  }
+  /* ticket-stub notches */
+  .card::before, .card::after{
+    content:"";
+    position:absolute;
+    width:22px;height:22px;
+    background:var(--parchment);
+    border:1px solid rgba(27,26,23,0.10);
+    border-radius:50%;
+    top:50%;
+    transform:translateY(-50%);
+  }
+  .card::before{ left:-12px; }
+  .card::after{ right:-12px; }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--rust);
+    margin:0 0 10px;
+  }
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:27px;
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  .card > p.sub{
+    font-size:13.5px;
+    color:#6b6357;
+    line-height:1.55;
+    margin:0 0 30px;
+  }
+
+  .btn-stack{ display:flex; flex-direction:column; gap:12px; }
+  .idbtn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:12px 16px;
+    border-radius:3px;
+    border:1px solid rgba(27,26,23,0.16);
+    background:#fff;
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--ink);
+    cursor:pointer;
+    transition: border-color .18s ease, background .18s ease, transform .12s ease;
+  }
+  .idbtn:hover{ border-color: rgba(27,26,23,0.34); transform: translateY(-1px); }
+  .idbtn:active{ transform: translateY(0); }
+  .idbtn svg{ width:18px; height:18px; flex:none; }
+
+  .idbtn.fb{ background:#1877F2; border-color:#1877F2; color:#fff; }
+  .idbtn.fb:hover{ background:#1567d3; border-color:#1567d3; }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:22px 0;
+    color:#9a917f;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+  .divider::before, .divider::after{
+    content:"";
+    height:1px;
+    flex:1;
+    background:rgba(27,26,23,0.12);
+  }
+
+  .status{
+    margin-top:20px;
+    padding:14px 16px;
+    border:1px dashed rgba(27,26,23,0.22);
+    background:var(--parchment);
+    font-size:13px;
+    line-height:1.55;
+    color:#4a4438;
+    display:none;
+  }
+  .status.show{ display:block; }
+  .status b{ color:var(--ink); }
+  .status .avatar{
+    width:34px;height:34px;border-radius:50%;
+    vertical-align:middle;margin-right:10px;
+    border:1px solid rgba(27,26,23,0.15);
+  }
+  .status button.signout{
+    margin-top:10px;
+    background:none;
+    border:none;
+    padding:0;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-decoration:underline;
+    color:var(--rust);
+    cursor:pointer;
+  }
+
+  .setup-note{
+    margin-top:26px;
+    font-size:11.5px;
+    line-height:1.6;
+    color:#9a917f;
+    border-top:1px solid rgba(27,26,23,0.10);
+    padding-top:16px;
+  }
+  .setup-note code{
+    background:rgba(27,26,23,0.06);
+    padding:1px 5px;
+    border-radius:2px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .seal circle, .seal path{ animation:none; stroke-dashoffset:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- LEFT: editorial panel -->
+  <div class="panel">
+    <div class="brand"><span class="dot"></span> The Archive</div>
+
+    <div class="panel-mid">
+      <h1>A quiet room for<br><em>what you've collected.</em></h1>
+      <p>Sign in to reopen your shelves, your marginalia, and every volume you've set aside to finish later.</p>
+
+      <div class="seal-row">
+        <svg class="seal" viewBox="0 0 46 46" fill="none">
+          <circle cx="23" cy="23" r="18"/>
+          <path d="M15 24l5.5 5.5L32 17"/>
+        </svg>
+        <div class="seal-label">Member access is<br><b>verified, not stored.</b> We never see your password.</div>
+      </div>
+    </div>
+
+    <div class="panel-foot">
+      <span>EST. READING ROOM</span>
+      <span>NO. 001</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: access card -->
+  <div class="side">
+    <div class="card">
+      <p class="eyebrow">Member Access</p>
+      <h2>Welcome back</h2>
+      <p class="sub">Continue with an account you already trust. No new password to remember.</p>
+
+      <div class="btn-stack">
+        <!-- Styled placeholder shown in demo mode; hidden once Google's real button renders -->
+        <button class="idbtn" id="googleBtn">
+          <svg viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.9c1.7-1.57 2.7-3.87 2.7-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.8.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.9v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.95 10.7A5.4 5.4 0 0 1 3.66 9c0-.59.1-1.17.29-1.7V4.97H.9A9 9 0 0 0 0 9c0 1.45.35 2.83.9 4.03l3.05-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .9 4.97l3.05 2.33C4.66 5.17 6.65 3.58 9 3.58z"/></svg>
+          Continue with Google
+        </button>
+        <!-- Google's real Identity Services button renders itself in here -->
+        <div id="googleBtnSlot"></div>
+
+        <!-- Facebook button kept in the markup but hidden while focus is on Google. -->
+        <button class="idbtn fb" id="fbBtn" style="display:none;">
+          <svg viewBox="0 0 18 18" fill="#fff"><path d="M18 9a9 9 0 1 0-10.4 8.9v-6.3H5.3V9h2.3V7c0-2.3 1.36-3.55 3.44-3.55.99 0 2.03.18 2.03.18v2.24h-1.14c-1.13 0-1.48.7-1.48 1.42V9h2.52l-.4 2.6h-2.12v6.3A9 9 0 0 0 18 9z"/></svg>
+          Continue with Facebook
+        </button>
+      </div>
+
+      <div class="divider">or</div>
+      <button class="idbtn" id="guestBtn" style="color:#6b6357;">Browse as a guest</button>
+
+      <div class="status" id="statusBox"></div>
+
+      <p class="setup-note">
+        Demo mode: no Google Client ID configured, so the button simulates a sign-in.
+        To go live, set <code>GOOGLE_CLIENT_ID</code> in the script below with a real
+        OAuth Client ID from Google Cloud Console.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================================================================
+     GOOGLE LOGIN SETUP (real Google Identity Services, no Keycloak)
+
+     This page ships in DEMO MODE: it simulates a successful sign-in so the
+     UI is fully explorable without credentials. To connect real accounts:
+
+     1) Go to https://console.cloud.google.com/apis/credentials
+     2) Create an OAuth 2.0 Client ID → Application type: "Web application"
+     3) Under "Authorized JavaScript origins", add the exact URL this page
+        is served from (e.g. https://presales.hrhub.ph)
+     4) Copy the Client ID into GOOGLE_CLIENT_ID below
+
+     Google's own script (loaded below) renders a real Google button and
+     returns a signed JWT with the person's name, email, and picture in
+     handleGoogleCredential(response) — no server or broker needed.
+     ====================================================================== -->
+
+<script>
+  const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+  const DEMO_MODE = GOOGLE_CLIENT_ID.startsWith("YOUR_");
+
+  const statusBox = document.getElementById('statusBox');
+
+  function showStatus(html){
+    statusBox.innerHTML = html;
+    statusBox.classList.add('show');
+  }
+
+  function signOut(){
+    statusBox.classList.remove('show');
+    statusBox.innerHTML = '';
+    if (window.google && !DEMO_MODE) {
+      try { google.accounts.id.disableAutoSelect(); } catch(e){}
+    }
+  }
+  window.signOut = signOut;
+
+  function decodeJwt(token){
+    try{
+      const base = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+      return JSON.parse(decodeURIComponent(atob(base).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    }catch(e){ return {}; }
+  }
+
+  function handleGoogleCredential(response){
+    const profile = decodeJwt(response.credential);
+    showStatus(
+      (profile.picture ? `<img class="avatar" src="${profile.picture}">` : '') +
+      `Signed in as <b>${profile.name || 'Google member'}</b><br>${profile.email || ''}` +
+      `<br><button class="signout" onclick="signOut()">Sign out</button>`
+    );
+  }
+
+  // ---------- Real Google flow ----------
+  function initGoogle(){
+    if (!window.google) {
+      showStatus(`Could not load Google's sign-in script. Check your connection and try again.`);
+      return;
+    }
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential
+    });
+    // Render Google's own official button directly into the Google button slot,
+    // replacing our styled placeholder.
+    document.getElementById('googleBtn').style.display = 'none';
+    google.accounts.id.renderButton(
+      document.getElementById('googleBtnSlot'),
+      { theme: 'outline', size: 'large', width: 320, shape: 'rectangular', text: 'continue_with' }
+    );
+  }
+
+  // ---------- Demo fallback (no Client ID configured) ----------
+  function initDemo(){
+    document.getElementById('googleBtn').addEventListener('click', () => {
+      showStatus(`Signed in as <b>Demo Reader</b> via Google` +
+        `<br><button class="signout" onclick="signOut()">Sign out</button>`);
+    });
+  }
+
+  // ---------- Guest (always local, no auth involved) ----------
+  document.getElementById('guestBtn').addEventListener('click', () => {
+    showStatus(`Browsing as <b>Guest</b> — some shelves are locked.` +
+      `<br><button class="signout" onclick="signOut()">Exit guest mode</button>`);
+  });
+
+  if (DEMO_MODE) {
+    initDemo();
+  } else {
+    // Load Google's Identity Services script, then initialize.
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true; s.defer = true;
+    s.onload = initGoogle;
+    s.onerror = initGoogle; // shows an error message if it fails to load
+    document.head.appendChild(s);
+  }
+</script>
+
+</body>
+</html>
